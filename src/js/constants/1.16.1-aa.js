@@ -176,6 +176,7 @@ export const TARGETS = {
     shells: 8,
     skulls: 3,
     debris: 20,
+    goldBlocks: 164,
 };
 
 // groups for the formatted output

@@ -1,54 +1,63 @@
-import { buildDump } from "./message.js";
-import { timeAgo } from "./format.js";
+import { buildMessage } from "./message/build.js";
+import { formatMs } from "./format.js";
+import { copyFromButton } from "./copy.js";
+import { addPreview } from "./preview.js";
 
 const statusLine = document.querySelector("#status");
 const runsContainer = document.querySelector("#runs");
 const cardTemplate = document.querySelector("#run-card");
 
-// Set the message of the paragraph in header
-export function setStatus(text){
+export function setStatus(text, isError = false){
     statusLine.textContent = text;
+    statusLine.classList.toggle("error", isError);
 }
 
-// Fill a single card with the template
-function buildCard(run, fetchedAt){
-    const card = cardTemplate.content.cloneNode(true);
-    const text = buildDump(run, fetchedAt);
+function headUrl(run){
+    return `https://mc-heads.net/avatar/${run.uuid ?? run.nickname}/96`;
+}
 
-    card.querySelector(".name").textContent = run.nickname;
-    card.querySelector(".meta").textContent = `Last update ${timeAgo(fetchedAt - run.lastUpdated)} ago`;
-    card.querySelector(".message").value = text;
+function nameElement(run){
+    if (!run.twitch){
+        return document.createTextNode(run.nickname);
+    }
+    const link = document.createElement("a");
+    link.href = `https://twitch.tv/${encodeURIComponent(run.twitch)}`;
+    link.target = "_blank";
+    link.rel = "noopener";
+    link.title = "Watch on Twitch";
+    link.textContent = run.nickname;
+    return link;
+}
+
+function buildCard(run){
+    const card = cardTemplate.content.firstElementChild.cloneNode(true);
+    const text = buildMessage(run);
+
+    card.querySelector(".head").src = headUrl(run);
+    card.querySelector(".name").append(nameElement(run));
+    card.querySelector(".igt").textContent = formatMs(run.igt);
+    card.querySelector(".count").textContent = `${run.advancements.count}/${run.advancements.total}`;
 
     const copyButton = card.querySelector(".copy");
-    const textarea = card.querySelector(".message");
-    copyButton.addEventListener("click", () => copyText(text, textarea, copyButton));
+    copyButton.addEventListener("click", () => copyFromButton(copyButton, text));
 
+    addPreview(card, run, text);
     return card;
 }
 
-// Build all cards
 export function renderRuns(snapshot){
     runsContainer.replaceChildren();
 
+    if (snapshot.runs.length === 0){
+        const empty = document.createElement("p");
+        empty.className = "empty";
+        empty.textContent = "No AA runs to show, redlime fix plsssss :(";
+        runsContainer.append(empty);
+        return;
+    }
+
     const runs = [...snapshot.runs].sort((a, b) => b.advancements.count - a.advancements.count);
     for (const run of runs){
-        runsContainer.append(buildCard(run, snapshot.fetchedAt));
+        runsContainer.append(buildCard(run));
     }
-}
-
-async function copyToClipboard(text, textarea){
-    try {
-        await navigator.clipboard.writeText(text);
-        return true;
-    } catch (err){
-        console.error(`Can't copy area: ${err}`);
-    }
-}
-
-async function copyText(text, textarea, button){
-    const copied = await copyToClipboard(text, textarea);
-    button.textContent = copied ? "Copied!" : "Failed to copy idk";
-    setTimeout(() => {
-        button.textContent = "Copy";
-    }, 1500);
 }

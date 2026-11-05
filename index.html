@@ -4,33 +4,65 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>TrAAcker</title>
+  <!-- Theme set to user default -->
+  <script>
+    {
+      let theme = null;
+      try {
+        theme = localStorage.getItem("theme");
+      } catch {
+        // if storage is blocked
+      }
+      if (theme !== "light" && theme !== "dark"){
+        theme = matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
+      }
+      document.documentElement.dataset.theme = theme;
+    }
+  </script>
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400..700&display=swap">
   <!-- Stylesheets -->
   <link rel="stylesheet" href="src/css/reset.css">
   <link rel="stylesheet" href="src/css/main.css">
+  <link rel="stylesheet" href="src/css/preview.css">
   <!-- Scripts -->
   <script type="module" src="src/js/main.js"></script>
 </head>
 <body>
-  <header>
+  <header class="site-header">
+    <button id="theme-toggle" class="theme-toggle icon-button" type="button">
+      <span class="icon icon-mode" aria-hidden="true"></span>
+    </button>
     <h1>AA Progress Tracker</h1>
-    <p id="status"></p>
-    <button id="refresh" type="button">Refresh</button>
+    <div class="refresh-area">
+      <p id="status"></p>
+      <button id="refresh" class="icon-button" type="button" aria-label="Refresh" title="Refresh">
+        <span class="icon icon-refresh" aria-hidden="true"></span>
+      </button>
+    </div>
   </header>
 
-  <main id="runs">
-
-  </main>
+  <main id="runs"></main>
 
   <template id="run-card">
-    <div class="run">
-      <h2 class="name"></h2>
-      <p class="meta"></p>
-      <textarea class="message" readonly rows="16"></textarea>
-      <div class="actions">
-        <button class="copy" type="button">Copy</button>
-        <span class="length"></span>
+    <article class="card">
+      <img class="head" width="48" height="48" alt="">
+      <div class="info">
+        <h2 class="name"></h2>
+        <p class="stats">
+          <span><span class="label">IGT:</span> <span class="igt"></span></span>
+          <span class="dot" aria-hidden="true">·</span>
+          <span class="count"></span>
+        </p>
       </div>
-    </div>
+      <button class="copy icon-button" type="button" aria-label="Copy Discord message" title="Copy Discord message">
+        <span class="icon icon-copy" aria-hidden="true"></span>
+        <span class="icon icon-check" aria-hidden="true"></span>
+        <span class="icon icon-cross" aria-hidden="true"></span>
+      </button>
+    </article>
   </template>
 
 </body>

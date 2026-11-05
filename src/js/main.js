@@ -1,34 +1,45 @@
 import { fetchLiveRuns } from "./api.js";
 import { parseSnapshot } from "./parse.js";
 import { renderRuns, setStatus } from "./render.js";
+import { timeAgo } from "./format.js";
+import { setupThemeToggle } from "./theme.js";
 
 const refreshButton = document.querySelector("#refresh");
 
-function describeSnapshot(snapshot){
-    const time = new Date(snapshot.fetchedAt).toLocaleTimeString();
-    const count = snapshot.runs.length;
-    if (count === 0){
-        return `No runs to view (checked at ${time}).`;
+let fetchedAt = null;
+
+function showLastUpdated(){
+    if (fetchedAt === null){
+        return;
     }
-    return `${count} live ${count === 1 ? "run" : "runs"} · fetched ${time}`;
+    const age = Date.now() - fetchedAt;
+    setStatus(`Last updated: ${age < 5000 ? "just now" : `${timeAgo(age)} ago`}`);
 }
 
 async function refresh(){
     refreshButton.disabled = true;
-    setStatus("Loading…");
+    refreshButton.classList.add("loading");
+    if (fetchedAt === null){
+        setStatus("Loading…");
+    }
 
     try {
         const rawRuns = await fetchLiveRuns();
         const snapshot = parseSnapshot(rawRuns, Date.now());
         renderRuns(snapshot);
-        setStatus(describeSnapshot(snapshot));
+        fetchedAt = snapshot.fetchedAt;
+        showLastUpdated();
     } catch (err){
         console.error(err);
-        setStatus(`Couldn't load runs (${err.message}). Try again in a moment.`);
+        fetchedAt = null;
+        setStatus(`Couldn't load runs (${err.message})`, true);
     } finally {
         refreshButton.disabled = false;
+        refreshButton.classList.remove("loading");
     }
 }
 
+setupThemeToggle();
 refreshButton.addEventListener("click", refresh);
+setInterval(showLastUpdated, 1000);
 refresh();
