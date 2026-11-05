@@ -1,21 +1,34 @@
 import { fetchLiveRuns } from "./api.js";
 import { parseSnapshot } from "./parse.js";
-import { buildDump } from "./message.js";
+import { renderRuns, setStatus } from "./render.js";
 
-const rawRuns = await fetchLiveRuns();
-const snapshot = parseSnapshot(rawRuns, Date.now());
-console.log(snapshot);
+const refreshButton = document.querySelector("#refresh");
 
-// test formatting
-console.table(snapshot.runs.map(run => ({
-    name: run.nickname,
-    advancements: run.advancements.count,
-    elytra: run.advancements.times["end/elytra"],
-    biomes: run.criteria.biomes.count,
-    cats: run.criteria.catsTamed.count,
-    shells: run.items.shells,
-})));
+function describeSnapshot(snapshot){
+    const time = new Date(snapshot.fetchedAt).toLocaleTimeString();
+    const count = snapshot.runs.length;
+    if (count === 0){
+        return `No runs to view (checked at ${time}).`;
+    }
+    return `${count} live ${count === 1 ? "run" : "runs"} · fetched ${time}`;
+}
 
-window.debug = { snapshot };
+async function refresh(){
+    refreshButton.disabled = true;
+    setStatus("Loading…");
 
-console.log(buildDump(snapshot.runs[0], snapshot.fetchedAt));
+    try {
+        const rawRuns = await fetchLiveRuns();
+        const snapshot = parseSnapshot(rawRuns, Date.now());
+        renderRuns(snapshot);
+        setStatus(describeSnapshot(snapshot));
+    } catch (err){
+        console.error(err);
+        setStatus(`Couldn't load runs (${err.message}). Try again in a moment.`);
+    } finally {
+        refreshButton.disabled = false;
+    }
+}
+
+refreshButton.addEventListener("click", refresh);
+refresh();
