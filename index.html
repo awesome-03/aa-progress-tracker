@@ -5,11 +5,33 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>TrAAcker</title>
   <!-- Stylesheets -->
+  <link rel="stylesheet" href="src/css/reset.css">
   <link rel="stylesheet" href="src/css/main.css">
   <!-- Scripts -->
   <script type="module" src="src/js/main.js"></script>
 </head>
 <body>
-  <h1>AA Progress Tracker</h1>
+  <header>
+    <h1>AA Progress Tracker</h1>
+    <p id="status"></p>
+    <button id="refresh" type="button">Refresh</button>
+  </header>
+
+  <main id="runs">
+
+  </main>
+
+  <template id="run-card">
+    <div class="run">
+      <h2 class="name"></h2>
+      <p class="meta"></p>
+      <textarea class="message" readonly rows="16"></textarea>
+      <div class="actions">
+        <button class="copy" type="button">Copy</button>
+        <span class="length"></span>
+      </div>
+    </div>
+  </template>
+
 </body>
 </html>

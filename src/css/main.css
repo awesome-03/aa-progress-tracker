@@ -1,0 +1,74 @@
+:root {
+  --bg-dark: hsl(336 0% 1%);
+  --bg: hsl(330 0% 4%);
+  --bg-light: hsl(0 0% 9%);
+  --text: hsl(0 0% 95%);
+  --text-muted: hsl(300 0% 69%);
+  --text-dimmed: hsla(0, 0%, 95%, 0.35);
+  --highlight: hsl(330 0% 39%);
+  --border: hsl(0 0% 28%);
+  --border-muted: hsl(0, 0%, 13%);
+  --primary: hsl(311, 78%, 72%);
+  --secondary: hsl(114, 65%, 42%);
+  --danger: hsl(9 26% 64%);
+  --warning: hsl(52 19% 57%);
+  --success: hsl(146 17% 59%);
+  --info: hsl(217 28% 65%);
+
+  --green: hsl(114, 65%, 42%);
+  --dark-green: hsla(120, 86%, 45%, 0.35);
+  --red: hsl(0, 65%, 48%);
+  --dark-red: hsla(0, 85%, 48%, 0.45);
+  --yellow: hsl(46, 97%, 45%);
+  --dark-yellow: hsla(41, 88%, 53%, 0.4);
+
+  --normal-gap: 1rem;
+}
+
+body {
+  background-color: var(--bg);
+  color: var(--text);
+  font-family: "Outfit", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 400;
+  font-style: normal;
+  font-size: 1.15rem;
+}
+
+header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.run {
+    margin-top: var(--normal-gap);
+    padding: var(--normal-gap);
+    border: 1px solid #ccc;
+    border-radius: 8px;
+}
+
+.run h2 {
+    margin: 0;
+}
+
+.meta,
+.length {
+    color: var(--text-dimmed);
+}
+
+.message {
+    width: 100%;
+    font-family: ui-monospace, monospace;
+}
+
+.actions {
+    display: flex;
+    align-items: center;
+    gap: calc(0.75 * var(--normal-gap));
+}
+
+.length.too-long {
+    color: var(--red);
+    font-weight: bold;
+}
