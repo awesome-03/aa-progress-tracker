@@ -1,5 +1,6 @@
 import { fetchLiveRuns } from "./api.js";
 import { parseSnapshot } from "./parse.js";
+import { buildDump } from "./message.js";
 
 const rawRuns = await fetchLiveRuns();
 const snapshot = parseSnapshot(rawRuns, Date.now());
@@ -16,3 +17,5 @@ console.table(snapshot.runs.map(run => ({
 })));
 
 window.debug = { snapshot };
+
+console.log(buildDump(snapshot.runs[0], snapshot.fetchedAt));
