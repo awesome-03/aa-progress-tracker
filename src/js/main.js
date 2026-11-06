@@ -5,6 +5,7 @@ import { timeAgo } from "./format.js";
 import { setupThemeToggle } from "./theme.js";
 
 const refreshButton = document.querySelector("#refresh");
+const refreshIcon = refreshButton.querySelector(".icon");
 
 let fetchedAt = null;
 
@@ -18,7 +19,6 @@ function showLastUpdated(){
 
 async function refresh(){
     refreshButton.disabled = true;
-    refreshButton.classList.add("loading");
     if (fetchedAt === null){
         setStatus("Loading…");
     }
@@ -35,11 +35,23 @@ async function refresh(){
         setStatus(`Couldn't load runs (${err.message})`, true);
     } finally {
         refreshButton.disabled = false;
-        refreshButton.classList.remove("loading");
     }
 }
 
+function spinIcon(){
+    if (matchMedia("(prefers-reduced-motion: reduce)").matches){
+        return;
+    }
+    refreshIcon.animate(
+        [{ transform: "rotate(0deg)" }, { transform: "rotate(360deg)" }],
+        { duration: 350, easing: "ease" },
+    );
+}
+
 setupThemeToggle();
-refreshButton.addEventListener("click", refresh);
+refreshButton.addEventListener("click", () => {
+    spinIcon();
+    refresh();
+});
 setInterval(showLastUpdated, 1000);
 refresh();
