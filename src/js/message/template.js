@@ -13,11 +13,11 @@ Elytra: {elytra}
 
 **Items:**
 God Apple: {godApple}  Trident: {trident}  VVF: {vvf}
-Shells: {shells}  Skulls: {skulls}  Debris: {debris}  Gold: {goldBlocks}  Bees: {bees}
+Shells: {shells}  Skulls: {skulls}  Debris: {debris}  Gold: {goldBlocks}
 
 **Biomes:** {count:biomes}
 Mesa: {mesa}  Snowy: {snowy}  Jungle: {jungle}  Mega Taiga: {megaTaiga}  Mushroom: {mushroom}
-Left: {missing:biomes:5}
+Left: {missing:biomes:3}
 
 **Animals:** {count:animalsBred}
 HDM: {hdm}  Llamas: {llamas}  Foxes: {foxes}  Ocelots: {ocelots}  Pandas: {pandas}
@@ -28,10 +28,11 @@ Endermite: {endermite}  Phantoms: {phantoms}  Zombie Doctor: {zombieDoctor}  Lod
 
 **Progress:**
 Mobs: {monstersHunted}  Food: {balancedDiet}  Cats: {completeCatalogue}
-Mobs left: {missing:monstersKilled:5}
-Food left: {missing:foodEaten:5}
+Mobs left: {missing:monstersKilled:3}
+Food left: {missing:foodEaten:3}
 Cats left: {missing:catsTamed:3}
-Advancements left: {missing:advancements:8}
 
 -# [TrAAcker](<https://awesomedev.site/aa-progress-tracker>)
 `;
+
+// Advancements left: {missing:advancements:5}
